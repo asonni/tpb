@@ -136,18 +136,6 @@ app.controller('MainCtrl', ['$scope', '$http','Upload', function($scope, $http, 
     console.log(data);
   });
   $scope.save = function(){
-    // $http({
-    //   method: 'post',
-    //   url: 'main/register',
-    //   data: $.param({
-    //     main_data: $scope.formMain
-    //   }),
-    //   headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    // }).success(function (results){
-    //   console.log(results);
-    // }).error(function (data, status){
-    //   console.log(data);
-    // });
     $http.post('api/register', {
       main_data: $scope.formMain
     }).success(function (results){
@@ -157,36 +145,42 @@ app.controller('MainCtrl', ['$scope', '$http','Upload', function($scope, $http, 
     });
   }
   $scope.onFileSelect = function(){
-    console.log($scope.memorandum);
+    // console.log(file);
     // if (!$scope.memorandum) return;
-    // Upload.upload({
-    //   url: 'main/fileUpload',
-    //   file: $scope.memorandum,
-    //   headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    // }).then(function (results) {
-    //   // file is uploaded successfully
-    //   console.log(results.data);
-    // });
-    // $scope.memorandum = {t1:"te",t2:"tw"};
-    // var newTask = $scope.formMain;
-    $http.post('api/tasks', {
-      formMain: $scope.formMain
-    }).success(function(data){
-        console.log(data);
-    }).error(function(data){
-        console.log(data);
+    Upload.upload({
+      url: 'api/fileUpload',
+      method: 'POST',
+      data: {file: $scope.memorandum}
+    }).then(function (resp) {
+        console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
+        // console.log(resp);
+    }, function (resp) {
+        console.log('Error status: ' + resp.status);
+    }, function (evt) {
+        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+        console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
     });
-    // $http({
-    //   method: 'post',
-    //   url: 'main/fileUpload',
-    //   data: $.param({
-    //     file: $scope.memorandum
-    //   }),
-    //   headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    // $http.post('api/fileUpload', {
+    //   name: $scope.memorandum.name,
+    //   size: $scope.memorandum.size,
+    //   type: $scope.memorandum.type
     // }).success(function (results){
-    //   console.log(results);
-    // }).error(function (data, status){
-    //   console.log(data);
+    //     console.log(results);
+    // }).error(function (data){
+    //     console.log(data);
     // });
   }
 }]);
+
+// app.controller('MyCtrl',[ '$scope', 'Upload', function($scope, Upload) {
+//   $scope.onFileSelect = function(file) {
+//     if (!file) return;
+//     Upload.upload({
+//         url: 'api/fileUpload',
+//         data: {file: file}
+//       }).then(function(resp) {
+//         // file is uploaded successfully
+//         console.log(resp.data);
+//       });    
+//   }
+// }]);

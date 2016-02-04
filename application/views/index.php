@@ -181,7 +181,7 @@
                   </div>
                 </div>
                 <br>
-                <!-- <div class="row">
+                <div class="row">
                   <div class="col-lg-10 col-lg-offset-1 table-responsive">
                     <div class="panel panel-info">
                       <div class="panel-heading">
@@ -195,7 +195,7 @@
                             <td style="border-left-style: hidden;">عقد التأسيس</td> 
                             <td>
                               <div class="form-group">
-                                <file-field class="btn btn-sm" ng-model="memorandum" ng-change="onFileSelect()" ngf-pattern="'image/*'" ngf-max-size="2M" ng-class="memorandum ? 'btn-success' : 'btn-warning'" preview="previewMemorandum">تحميل الملف</file-field>
+                                <file-field class="btn btn-sm" ng-model="memorandum" ng-change="onFileSelect()" ng-class="memorandum ? 'btn-success' : 'btn-warning'" preview="previewMemorandum">تحميل الملف</file-field>
                                 <a ng-href="{{previewMemorandum}}" ng-if="previewMemorandum" class="btn btn-info btn-sm btn-show animated fadeIn" target="_blank">عرض</a>
                               </div>
                             </td> 
@@ -233,7 +233,7 @@
                       </table>
                     </div>
                   </div>
-                </div> -->
+                </div>
                 <hr>
                 <div class="row">
                   <div class="col-xs-4 col-xs-offset-2 col-lg-2 col-lg-offset-4">
@@ -254,7 +254,7 @@
       </div>
     </div>
     <script src="public/js/jquery/jquery-2.1.4.min.js"></script>
-    <script src="public/js/bootstrap/bootstrap.min.js"></script>
+    <!-- // <script src="public/js/bootstrap/bootstrap.min.js"></script> -->
     <script src="public/js/angular/angular.min.js"></script>
     <script src="public/js/angular/angular-route.min.js"></script>
     <script src="public/js/angular/angular-animate.min.js"></script>

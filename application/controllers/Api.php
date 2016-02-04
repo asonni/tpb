@@ -4,91 +4,56 @@ require APPPATH.'/libraries/REST_Controller.php';
 
 class Api extends REST_Controller
 {
-  function __construct()
-    {
-        // Construct our parent class
-        parent::__construct();
-        
-    }
-  
-  // get all tasks if no parameter supplied
-  public function tasks_get()
-  {
-    if(! $this->get('id'))
-    {
-      // get all record
-      $tasks = $this->task_model->get_all();
-    } else {
-      // get a record based on ID
-      $tasks = $this->task_model->get_task($this->get('id'));
-    }
-    
-    if($tasks)
-    {
-      $this->response($tasks, 200); // 200 being the HTTP response code
-    } else {
-      $this->response([], 404);
-    }
+  function __construct(){
+    // Construct our parent class
+    parent::__construct();
   }
   public function register_post(){
     // echo ($data['companyName']);
     $data = $this->post('main_data');
     $status = $this->Main_model->insert($data);
-    $this->response($data);
-    // if ($status){
-    //   echo json_encode($status);
-    // } else {
-    //   echo json_encode($status);
-    // }
+    $this->response($status);
   }
-  public function tasks_post()
-  {
-    if(! $this->post('formMain'))
-    {
-      $this->response(array('error' => 'Missing post data: title'), 400);
+  public function fileUpload_post(){
+    $errors = array();
+    $file_name = $_FILES['file']['name'];
+    $file_size = $_FILES['file']['size'];
+    $file_tmp = $_FILES['file']['tmp_name'];
+    $file_type= $_FILES['file']['type'];
+    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+    $file_path = './public/uploads/' . $file_name;
+    $extensions = array("pdf");
+    if(in_array($file_ext,$extensions ) === false){
+      $errors[]="file extension not allowed, please choose a PDF file only.";
     }
-    else{
-      $data = array(
-        'formMain' => $this->post('formMain')
-      );
-      $this->response($data, 200);
+    if($file_size > 2097152){
+      $errors[] = "File size cannot exceed 2 MB";
     }
-    // $this->db->insert('task',$data);
-    // if($this->db->insert_id() > 0)
-    // {
-    //   $message = array('id' => $this->db->insert_id(), 'title' => $this->post('title'));
-    //   $this->response($message, 200); // 200 being the HTTP response code
-    // }
-  }
-  
-  public function tasks_delete($id=NULL)
-  {
-    if($id == NULL)
-    {
-      $message = array('error' => 'Missing delete data: id');
-      $this->response($message, 400);
+    if(empty($errors)==true){
+      $result = move_uploaded_file($file_tmp, $file_path);
+      $this->response($result);
     } else {
-      $this->task_model->delete_task($id);
-      $message = array('id' => $id, 'message' => 'DELETED!');
-      $this->response($message, 200); // 200 being the HTTP response code
+      $this->response($errors);
     }
+    // // $config['encrypt_name'] = TRUE;
+    // $config['file_name'] = $file_name;
+    // $config['file_size'] = $file_size;
+    // $config['file_tmp'] = $file_tmp;
+    // $config['file_type'] = $file_type;
+    // $config['upload_path'] = './public/uploads/';
+    // $config['allowed_types'] = 'pdf';
+    // $config['max_size'] = 1024 * 8;
+    // $this->load->library('upload', $config);
+    // // // $data = $this->upload->data();
+    // if ( ! $this->upload->do_upload())
+    // {
+    //   // $error = array('error' => $this->upload->display_errors());
+    //   $this->response($this->upload->display_errors());
+    // }
+    // else
+    // {
+    //   // $data = array('upload_data' => $this->upload->data());
+    //   $this->response($this->upload->data());
+    // }
   }
-  
-  public function tasks_put()
-  {
-    //perform validation
-    if(! $this->put('title'))
-    {
-      $this->response(array('error' => 'Task title is required'), 400);
-    }
-    
-    $data = array(
-      'title'   => $this->put('title'),
-      'status'  => $this->put('status')
-    );
-    $this->task_model->update_task($this->put('id'), $data);
-    $message = array('success' => $this->put('title').' Updated!');
-    $this->response($message, 200);
-  }
-
 }
