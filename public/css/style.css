@@ -1,0 +1,37 @@
+/*@import url(http://fonts.googleapis.com/earlyaccess/droidarabickufi.css);*/
+/*@font-face {
+  font-family: 'JFFlat';
+  src : url("../fonts/JF-Flat-regular.ttf") format("truetype");
+}*/
+@font-face {
+  font-family: 'Droid Arabic Kufi';
+  src: url("../fonts/DroidKufi-Regular.ttf") format("truetype");
+}
+body {
+  font-family: 'Droid Arabic Kufi', sans-serif;
+  padding-top: 10px;
+  background: url(../img/background.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.error-msg{
+  /*position: absolute;*/
+}
+/*.has-error>h6{
+  color: red;
+}
+.has-success>h6{
+  color: green;
+}*/
+.header-title{
+  color: #2d8bc1;
+}
+.pandel-transparent {
+  opacity: 0.9;
+}
+.btn-show {
+  position: absolute;
+  margin-right: 5px;
+}
