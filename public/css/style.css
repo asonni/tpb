@@ -28,10 +28,18 @@ body {
 .header-title{
   color: #2d8bc1;
 }
-.pandel-transparent {
+.panel-transparent {
   opacity: 0.9;
 }
 .btn-show {
   position: absolute;
   margin-right: 5px;
+}
+p.bg-danger {
+  margin-top: 10px;
+  margin-bottom: -5px;
+}
+.progress.progress-striped{
+  margin-top: 10px;
+  margin-bottom: -5px;
 }

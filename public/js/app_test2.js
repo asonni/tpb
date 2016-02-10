@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('tpb', ['ngRoute','ui-notification','jcs-autoValidate','mgcrea.ngStrap','ngAnimate','ngFileUpload','bootstrap.fileField']);
+var app = angular.module('tpb', ['ngRoute','ui-notification','jcs-autoValidate','mgcrea.ngStrap','ngAnimate','ngFileUpload']);
 
 app.run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver){
   // validator.setErrorMessageResolver(myCustomErrorMessageResolver.resolve);
@@ -49,8 +49,73 @@ app.config(function($datepickerProvider) {
 //   });
 //   // console.log(obj);
 // }]);
+// app.factory('uploadFactory',['$timeout','Upload',function($timeout,Upload){
+//   return {
+//     uploadFile: function(file){
+//       var results = {};
+//       if (file && (file.type === 'application/pdf') && (file.size <= 2000000)) {
+//         Upload.upload({
+//           url: 'api/fileUpload',
+//           method: 'POST',
+//           data: {file: file}
+//         }).then(function (response) {
+//           $timeout(function () {
+//             results.response = response.data;
+//             // console.log(results);
+//             // return results;
+//           });
+//         }, function (response) {
+//             if (response.status > 0){
+//               results.errorMsg = response.status + ': ' + response.data;
+//               // console.log(results);
+//               // return results;
+//             }
+//         }, function (evt) {
+//             results.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+//             // console.log(results);
+//             // return results;
+//         });
+//         return results;
+//       } else {
+//         results.errorFileType = true;
+//         return results;
+//       }
+//     }
+//   };
+// }]);
 
-app.controller('MainCtrl', ['$scope', '$http','$timeout', 'Upload', function($scope, $http, $timeout, Upload) {
+app.service('uploadService',['$timeout','Upload',function($timeout,Upload){
+  this.uploadFile = function(file) {
+    var results = {};
+    results.errorFileType = false;
+    if (file && (file.type === 'application/pdf') && (file.size <= 2000000)) {
+      Upload.upload({
+        url: 'api/fileUpload',
+        method: 'POST',
+        data: {file: file}
+      }).then(function (response) {
+        $timeout(function () {
+          results.result = response.data;
+          // console.log(result);
+        });
+      }, function (response) {
+          if (response.status > 0){
+            results.errorMsg = response.status + ': ' + response.data;
+            // console.log(errorMsg);
+          }
+      }, function (evt) {
+          results.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+          // console.log(progress);
+          // return progress;
+      });
+    } else {
+      results.errorFileType = true;
+      // console.log(errorFileType);
+    }
+    return results;
+  };
+}]);
+app.controller('MainCtrl', ['$scope', '$http','$timeout', 'Upload', 'uploadService', function($scope, $http, $timeout, Upload, uploadService) {
   $scope.formMain = {
     "companyName": "t1",
     "activityKind": "t2",
@@ -89,66 +154,37 @@ app.controller('MainCtrl', ['$scope', '$http','$timeout', 'Upload', function($sc
         console.log(data);
     });
   }
-  $scope.onFileSelect = function(file){
-    var file = $scope.memorandum;
-    // console.log(file);
-    // if (!$scope.memorandum) return;
-    // if (file) {
+  $scope.onFileSelect = function(){
+    $scope.errorFileType = false;
+    $scope.file = uploadService.uploadFile($scope.memorandum);
+    // $timeout(function () {
+    //   console.log($scope.results);
+    // });
+    // var file = $scope.memorandum;
+    // if (file && (file.type === 'application/pdf') && (file.size <= 2000000)) {
+    //   console.log(file);
+    // }
+    // if (file && (file.type === 'application/pdf') && (file.size <= 2000000)) {
     //   Upload.upload({
     //     url: 'api/fileUpload',
     //     method: 'POST',
     //     data: {file: file}
-    //   }).then(function (resp) {
-    //       console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
-    //       // console.log(resp);
-    //   }, function (resp) {
-    //       console.log('Error status: ' + resp.status);
+    //   }).then(function (response) {
+    //     $timeout(function () {
+    //       $scope.result = response.data;
+    //       console.log($scope.result);
+    //     });
+    //   }, function (response) {
+    //       if (response.status > 0){
+    //         $scope.errorMsg = response.status + ': ' + response.data;
+    //         console.log($scope.errorMsg);
+    //       }
     //   }, function (evt) {
-    //       var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-    //       console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+    //       $scope.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+    //       console.log($scope.progress);
     //   });
+    // } else {
+    //   $scope.errorFileType = true;
     // }
-    if (file) {
-      Upload.upload({
-        url: 'api/fileUpload',
-        method: 'POST',
-        data: {file: file}
-      }).then(function (response) {
-        $timeout(function () {
-          $scope.result = response.data;
-          console.log($scope.result);
-        });
-      }, function (response) {
-          if (response.status > 0){
-            $scope.errorMsg = response.status + ': ' + response.data;
-            console.log($scope.errorMsg);
-          }
-      }, function (evt) {
-          $scope.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-          console.log($scope.progress);
-      });
-    }   
-    // $http.post('api/fileUpload', {
-    //   name: $scope.memorandum.name,
-    //   size: $scope.memorandum.size,
-    //   type: $scope.memorandum.type
-    // }).success(function (results){
-    //     console.log(results);
-    // }).error(function (data){
-    //     console.log(data);
-    // });
   }
 }]);
-
-// app.controller('MyCtrl',[ '$scope', 'Upload', function($scope, Upload) {
-//   $scope.onFileSelect = function(file) {
-//     if (!file) return;
-//     Upload.upload({
-//         url: 'api/fileUpload',
-//         data: {file: file}
-//       }).then(function(resp) {
-//         // file is uploaded successfully
-//         console.log(resp.data);
-//       });    
-//   }
-// }]);

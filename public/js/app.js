@@ -1,62 +1,5 @@
 'use strict';
-
-var app = angular.module('tpb', ['ngRoute','ui-notification','jcs-autoValidate','mgcrea.ngStrap','ngAnimate','ngFileUpload','bootstrap.fileField']);
-// app.factory('myCustomElementModifier', [
-//                 function () {
-//                     var /**
-//                              * @ngdoc function
-//                              * @name myCustomElementModifier#makeValid
-//                              * @methodOf myCustomElementModifier
-//                              *
-//                              * @description
-//                              * Makes an element appear valid by apply custom styles and child elements.
-//                              *
-//                              * @param {Element} el - The input control element that is the target of the validation.
-//                              */
-//                             makeValid = function (el) {
-//                                 el.removeClass('bg-red');
-//                                 el.addClass('bg-green');
-//                             },
-
-//                             *
-//                              * @ngdoc function
-//                              * @name myCustomElementModifier#makeInvalid
-//                              * @methodOf myCustomElementModifier
-//                              *
-//                              * @description
-//                              * Makes an element appear invalid by apply custom styles and child elements.
-//                              *
-//                              * @param {Element} el - The input control element that is the target of the validation.
-//                              * @param {String} errorMsg - The validation error message to display to the user.
-                             
-//                             makeInvalid = function (el, errorMsg) {
-//                                 el.removeClass('bg-green');
-//                                 el.addClass('bg-red');
-//                             },
-
-//                             /**
-//                              * @ngdoc function
-//                              * @name myCustomElementModifier#makeDefault
-//                              * @methodOf myCustomElementModifier
-//                              *
-//                              * @description
-//                              * Makes an element appear in it default state.
-//                              *
-//                              * @param {Element} el - The input control element that is the target of the validation.
-//                              */
-//                             makeDefault = function (el) {
-//                                 el.removeClass('bg-green');
-//                                 el.removeClass('bg-red');
-//                             };
-
-//                     return {
-//                         makeValid: makeValid,
-//                         makeInvalid: makeInvalid,
-//                         makeDefault: makeDefault,
-//                         key: 'myCustomModifierKey'
-//                     };
-//                 }
-//             ]);
+var app = angular.module('tpb', ['ngRoute','ui-notification','jcs-autoValidate','mgcrea.ngStrap','ngAnimate','ngFileUpload']);
 app.run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver){
   // validator.setErrorMessageResolver(myCustomErrorMessageResolver.resolve);
   defaultErrorMessageResolver.setI18nFileRootPath('public/js/angular-auto-validate/dist/lang');
@@ -95,17 +38,36 @@ app.config(function($datepickerProvider) {
     dateType: 'string'
   });
 });
-
-// app.factory('allNationalities', ['$http', function($http){
-//   var obj = {content:null};
-//   $http.get('nationality.json').success(function (data) {
-//     obj.content = data;
-//     return obj;
-//   });
-//   // console.log(obj);
-// }]);
-
-app.controller('MainCtrl', ['$scope', '$http','Upload', function($scope, $http, Upload) {
+app.service('uploadService',['$timeout','Upload',function($timeout,Upload){
+  this.uploadFile = function(file, fieldName, insertedID) {
+    var results = {errorFileType:false};
+    if (file && (file.type === 'application/pdf') && (file.size <= 2000000)) {
+      Upload.upload({
+        url: 'api/fileUpload',
+        method: 'POST',
+        data: {file: file, 'fieldName': fieldName, 'insertedID': insertedID}
+      }).then(function (response) {
+        $timeout(function () {
+          results.result = response.data;
+          // console.log(results.result);
+        });
+      }, function (response) {
+          if (response.status > 0){
+            results.errorMsg = response.status + ': ' + response.data;
+            // console.log(results.errorMsg);
+          }
+      }, function (evt) {
+          results.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+          // console.log(results.progress);
+      });
+    } else {
+      results.errorFileType = true;
+      // console.log(results.errorFileType);
+    }
+    return results;
+  };
+}]);
+app.controller('MainCtrl', ['$scope', '$http', 'uploadService', function($scope, $http, uploadService) {
   $scope.formMain = {
     "companyName": "t1",
     "activityKind": "t2",
@@ -139,48 +101,34 @@ app.controller('MainCtrl', ['$scope', '$http','Upload', function($scope, $http, 
     $http.post('api/register', {
       main_data: $scope.formMain
     }).success(function (results){
-        console.log(results);
+      if ($scope.memorandum) {
+        $scope.memorandumFile = uploadService.uploadFile($scope.memorandum,'memorandum',results.insertedID);
+      }
+      if ($scope.statute) {
+        $scope.statuteFile = uploadService.uploadFile($scope.statute,'statute',results.insertedID);
+      }
+      if ($scope.operatingLicense) {
+        $scope.operatingLicenseFile = uploadService.uploadFile($scope.operatingLicense,'operatingLicense',results.insertedID);
+      }
+      if ($scope.commercialRecord) {
+        $scope.commercialRecordFile = uploadService.uploadFile($scope.commercialRecord,'commercialRecord',results.insertedID);
+      }
+      if ($scope.chamber) {
+        $scope.chamberFile = uploadService.uploadFile($scope.chamber,'chamber',results.insertedID);
+      }
+      if ($scope.detectionExecutedProjects) {
+        $scope.detectionExecutedProjectsFile = uploadService.uploadFile($scope.detectionExecutedProjects,'detectionExecutedProjects',results.insertedID);
+      }
     }).error(function (data){
         console.log(data);
     });
   }
-  $scope.onFileSelect = function(){
-    // console.log(file);
-    // if (!$scope.memorandum) return;
-    Upload.upload({
-      url: 'api/fileUpload',
-      method: 'POST',
-      data: {file: $scope.memorandum}
-    }).then(function (resp) {
-        console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
-        // console.log(resp);
-    }, function (resp) {
-        console.log('Error status: ' + resp.status);
-    }, function (evt) {
-        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-        console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-    });
-    // $http.post('api/fileUpload', {
-    //   name: $scope.memorandum.name,
-    //   size: $scope.memorandum.size,
-    //   type: $scope.memorandum.type
-    // }).success(function (results){
-    //     console.log(results);
-    // }).error(function (data){
-    //     console.log(data);
-    // });
+  $scope.reset = function(){
+    $scope.memorandum = "";
+    $scope.statute = "";
+    $scope.operatingLicense = "";
+    $scope.commercialRecord = "";
+    $scope.chamber = "";
+    $scope.detectionExecutedProjects = "";
   }
 }]);
-
-// app.controller('MyCtrl',[ '$scope', 'Upload', function($scope, Upload) {
-//   $scope.onFileSelect = function(file) {
-//     if (!file) return;
-//     Upload.upload({
-//         url: 'api/fileUpload',
-//         data: {file: file}
-//       }).then(function(resp) {
-//         // file is uploaded successfully
-//         console.log(resp.data);
-//       });    
-//   }
-// }]);

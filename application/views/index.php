@@ -30,7 +30,7 @@
               </h3>
             </div>
             <div class="panel-body">
-              <form role="form" ng-submit="save()" novalidate="novalidate">
+              <form role="form" name="myForm" ng-submit="save()" novalidate="novalidate">
                 <div class="row">
                   <div class="col-lg-6">
                     <div class="form-group">
@@ -182,51 +182,145 @@
                 </div>
                 <br>
                 <div class="row">
-                  <div class="col-lg-10 col-lg-offset-1 table-responsive">
+                  <div class="col-lg-10 col-lg-offset-1 table-responsive animated fadeIn">
                     <div class="panel panel-info">
                       <div class="panel-heading">
                         <h3 class="panel-title">
-                          تحميل المستندات (PDF, JPG, PNG)
+                          تحميل المستندات نوع (PDF) فقط
                         </h3>
                       </div>
                       <table class="table table-striped table-bordered"> 
                         <tbody>
                           <tr>
-                            <td style="border-left-style: hidden;">عقد التأسيس</td> 
+                            <td width="50%">
+                              عقد التأسيس
+                              <button 
+                                class="btn btn-sm pull-left" type="file" ngf-select ng-model="memorandum" name="memorandum"
+                                accept=".pdf" ngf-max-size="2MB" required="required"
+                                ngf-model-invalid="errorFiles" ng-class="(memorandum && memorandum.type == 'application/pdf') ? 'btn-success' : 'btn-warning'">
+                                تحميل الملف
+                              </button>
+                              <div class="text-center">
+                                <p class="bg-danger" ng-show="myForm.memorandum.$error.maxSize">
+                                  حجم الملف كبير جدا {{errorFiles[0].size / 1000000|number:1}}MB : 
+                                  الحد اﻷقصي 2MB
+                                </p>
+                                <p class="bg-danger" ng-show="memorandum && (memorandum.type != 'application/pdf') && !myForm.memorandum.$error.maxSize">
+                                  خطأ : الرجاء اختيار ملف نوع (PDF) فقط
+                                </p>
+                                <div class="progress progress-striped active" ng-if="memorandumFile.progress">
+                                  <div class="progress-bar" ng-style="{'width': memorandumFile.progress + '%'}"></div>
+                                </div>
+                              </div>
+                            </td>
+                            <td style="border-right: 1px solid #dddddd;" width="50%">
+                              النظام اﻷساسي
+                              <button 
+                                class="btn btn-sm pull-left" type="file" ngf-select ng-model="statute" name="statute"
+                                accept=".pdf" ngf-max-size="2MB" required="required"
+                                ngf-model-invalid="errorFiles" ng-class="(statute && statute.type == 'application/pdf') ? 'btn-success' : 'btn-warning'">
+                                تحميل الملف
+                              </button>
+                              <div class="text-center">
+                                <p class="bg-danger" ng-show="myForm.statute.$error.maxSize">
+                                  حجم الملف كبير جدا {{errorFiles[0].size / 1000000|number:1}}MB : 
+                                  الحد اﻷقصي 2MB
+                                </p>
+                                <p class="bg-danger" ng-show="statuteFile.errorFileType && !myForm.statute.$error.maxSize">
+                                  خطأ : الرجاء اختيار ملف نوع (PDF) فقط
+                                </p>
+                                <div class="progress progress-striped active" ng-if="statuteFile.progress && !statuteFile.errorFileType">
+                                  <div class="progress-bar" ng-style="{'width': statuteFile.progress + '%'}"></div>
+                                </div>
+                              </div>
+                            </td>
+                          </tr> 
+                          <tr>
                             <td>
-                              <div class="form-group">
-                                <file-field class="btn btn-sm" ng-model="memorandum" ng-change="onFileSelect()" ng-class="memorandum ? 'btn-success' : 'btn-warning'" preview="previewMemorandum">تحميل الملف</file-field>
-                                <a ng-href="{{previewMemorandum}}" ng-if="previewMemorandum" class="btn btn-info btn-sm btn-show animated fadeIn" target="_blank">عرض</a>
+                              ترخيص مزاول المهنة
+                              <button 
+                                class="btn btn-sm pull-left" type="file" ngf-select ng-model="operatingLicense" name="operatingLicense"
+                                accept=".pdf" ngf-max-size="2MB" required="required"
+                                ngf-model-invalid="errorFiles" ng-class="(operatingLicense && operatingLicense.type == 'application/pdf') ? 'btn-success' : 'btn-warning'">
+                                تحميل الملف
+                              </button>
+                              <div class="text-center">
+                                <p class="bg-danger" ng-show="myForm.operatingLicense.$error.maxSize">
+                                  حجم الملف كبير جدا {{errorFiles[0].size / 1000000|number:1}}MB : 
+                                  الحد اﻷقصي 2MB
+                                </p>
+                                <p class="bg-danger" ng-show="operatingLicenseFile.errorFileType && !myForm.operatingLicense.$error.maxSize">
+                                  خطأ : الرجاء اختيار ملف نوع (PDF) فقط
+                                </p>
+                                <div class="progress progress-striped active" ng-if="operatingLicenseFile.progress && !operatingLicenseFile.errorFileType">
+                                  <div class="progress-bar" ng-style="{'width': operatingLicenseFile.progress + '%'}"></div>
+                                </div>
                               </div>
                             </td> 
-                            <td style="border-left-style: hidden;">النظام اﻷساسي</td>
-                            <td>
-                              <file-field class="btn btn-sm" ng-model="statute" ng-class="statute ? 'btn-success' : 'btn-warning'" preview="previewStatute">تحميل الملف</file-field>
-                              <a ng-href="{{previewStatute}}" ng-if="previewStatute" class="btn btn-info btn-sm btn-show animated fadeIn" target="_blank">عرض</a>
+                            <td style="border-right: 1px solid #dddddd;">
+                              السجل التجاري
+                              <button 
+                                class="btn btn-sm pull-left" type="file" ngf-select ng-model="commercialRecord" name="commercialRecord"
+                                accept=".pdf" ngf-max-size="2MB" required="required"
+                                ngf-model-invalid="errorFiles" ng-class="(commercialRecord && commercialRecord.type == 'application/pdf') ? 'btn-success' : 'btn-warning'">
+                                تحميل الملف
+                              </button>
+                              <div class="text-center">
+                                <p class="bg-danger" ng-show="myForm.commercialRecord.$error.maxSize">
+                                  حجم الملف كبير جدا {{errorFiles[0].size / 1000000|number:1}}MB : 
+                                  الحد اﻷقصي 2MB
+                                </p>
+                                <p class="bg-danger" ng-show="commercialRecordFile.errorFileType && !myForm.commercialRecord.$error.maxSize">
+                                  خطأ : الرجاء اختيار ملف نوع (PDF) فقط
+                                </p>
+                                <div class="progress progress-striped active" ng-if="commercialRecordFile.progress && !commercialRecordFile.errorFileType">
+                                  <div class="progress-bar" ng-style="{'width': commercialRecordFile.progress + '%'}"></div>
+                                </div>
+                              </div>
                             </td> 
                           </tr> 
                           <tr>
-                            <td style="border-left-style: hidden;">ترخيص مزاول المهنة</td> 
                             <td>
-                              <file-field class="btn btn-sm" ng-model="operatingLicense" ng-class="operatingLicense ? 'btn-success' : 'btn-warning'" preview="previewOperatingLicense">تحميل الملف</file-field>
-                              <a ng-href="{{previewOperatingLicense}}" ng-if="previewOperatingLicense" class="btn btn-info btn-sm btn-show animated fadeIn" target="_blank">عرض</a>
+                              الغرفة التجارية
+                              <button 
+                                class="btn btn-sm pull-left" type="file" ngf-select ng-model="chamber" name="chamber"
+                                accept=".pdf" ngf-max-size="2MB" required="required"
+                                ngf-model-invalid="errorFiles" ng-class="(chamber && chamber.type == 'application/pdf') ? 'btn-success' : 'btn-warning'">
+                                تحميل الملف
+                              </button>
+                              <div class="text-center">
+                                <p class="bg-danger" ng-show="myForm.chamber.$error.maxSize">
+                                  حجم الملف كبير جدا {{errorFiles[0].size / 1000000|number:1}}MB : 
+                                  الحد اﻷقصي 2MB
+                                </p>
+                                <p class="bg-danger" ng-show="chamberFile.errorFileType && !myForm.chamber.$error.maxSize">
+                                  خطأ : الرجاء اختيار ملف نوع (PDF) فقط
+                                </p>
+                                <div class="progress progress-striped active" ng-if="chamberFile.progress && !chamberFile.errorFileType">
+                                  <div class="progress-bar" ng-style="{'width': chamberFile.progress + '%'}"></div>
+                                </div>
+                              </div>
                             </td> 
-                            <td style="border-left-style: hidden;">السجل التجاري</td>
-                            <td>
-                              <file-field class="btn btn-sm" ng-model="commercialRecord" ng-class="commercialRecord ? 'btn-success' : 'btn-warning'" preview="previewCommercialRecord">تحميل الملف</file-field>
-                              <a ng-href="{{previewCommercialRecord}}" ng-if="previewCommercialRecord" class="btn btn-info btn-sm btn-show animated fadeIn" target="_blank">عرض</a>
-                            </td> 
-                          </tr> 
-                          <tr>
-                            <td style="border-left-style: hidden;">الغرفة التجارية</td> 
-                            <td>
-                              <file-field class="btn btn-sm" ng-model="chamber" ng-class="chamber ? 'btn-success' : 'btn-warning'" preview="previewChamber">تحميل الملف</file-field>
-                              <a ng-href="{{previewChamber}}" ng-if="previewChamber" class="btn btn-info btn-sm btn-show animated fadeIn" target="_blank">عرض</a>
-                            </td> 
-                            <td style="border-left-style: hidden;">كشف بالمشاريع المنفذة</td>
-                            <td>
-                              <file-field class="btn btn-sm" ng-model="detectionExecutedProjects" ng-class="detectionExecutedProjects ? 'btn-success' : 'btn-warning'" preview="previewDetectionExecutedProjects">تحميل الملف</file-field>
-                              <a ng-href="{{previewDetectionExecutedProjects}}" ng-if="previewDetectionExecutedProjects" class="btn btn-info btn-sm btn-show animated fadeIn" target="_blank">عرض</a>
+                            <td style="border-right: 1px solid #dddddd;">
+                              كشف بالمشاريع المنفذة
+                              <button 
+                                class="btn btn-sm pull-left" type="file" ngf-select ng-model="detectionExecutedProjects" name="detectionExecutedProjects"
+                                accept=".pdf" ngf-max-size="2MB" required="required"
+                                ngf-model-invalid="errorFiles" ng-class="(detectionExecutedProjects && detectionExecutedProjects.type == 'application/pdf') ? 'btn-success' : 'btn-warning'">
+                                تحميل الملف
+                              </button>
+                              <div class="text-center">
+                                <p class="bg-danger" ng-show="myForm.detectionExecutedProjects.$error.maxSize">
+                                  حجم الملف كبير جدا {{errorFiles[0].size / 1000000|number:1}}MB : 
+                                  الحد اﻷقصي 2MB
+                                </p>
+                                <p class="bg-danger" ng-show="detectionExecutedProjectsFile.errorFileType && !myForm.detectionExecutedProjects.$error.maxSize">
+                                  خطأ : الرجاء اختيار ملف نوع (PDF) فقط
+                                </p>
+                                <div class="progress progress-striped active" ng-if="detectionExecutedProjectsFile.progress && !detectionExecutedProjectsFile.errorFileType">
+                                  <div class="progress-bar" ng-style="{'width': detectionExecutedProjectsFile.progress + '%'}"></div>
+                                </div>
+                              </div>
                             </td> 
                           </tr>
                         </tbody>
@@ -240,7 +334,7 @@
                     <button type="submit" class="btn btn-sm btn-primary btn-block">تسجيل</button>
                   </div>
                   <div class="col-xs-4 col-lg-2">
-                    <button type="reset" class="btn btn-sm btn-danger btn-block">إلغاء</button>
+                    <button type="reset" ng-click="reset()" class="btn btn-sm btn-danger btn-block">إلغاء</button>
                   </div>
                 </div>
               </form>
@@ -260,13 +354,13 @@
     <script src="public/js/angular/angular-animate.min.js"></script>
     <script src="public/js/angular/i18n/angular-locale_ar-ly.js"></script>
     <script src="public/js/angular-ui-notification/angular-ui-notification.min.js"></script>
-    <script src="public/js/angular-block-ui/angular-block-ui.min.js"></script>
+    <!-- // <script src="public/js/angular-block-ui/angular-block-ui.min.js"></script> -->
     <script src="public/js/angular-auto-validate/jcs-auto-validate.min.js"></script>
     <script src="public/js/jquery/jquery.mask.js"></script>
     <script src="public/js/angular-strap/angular-strap.min.js"></script>
     <script src="public/js/angular-strap/angular-strap.tpl.min.js"></script>
     <script src="public/js/ng-file-upload/ng-file-upload.min.js"></script>
-    <script src="public/js/angular-bootstrap-file-field.min.js"></script>
+    <script src="public/js/ng-file-upload/ng-file-upload-shim.min.js"></script>
     <script src="public/js/mask.js"></script>
     <script src="public/js/app.js"></script>
   </body>

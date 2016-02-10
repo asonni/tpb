@@ -6,4 +6,10 @@ class Main_model extends CI_Model{
     $result = array('status' => $insert, 'insertedID' => $insert_id);
     return $result;
   }
+  public function insert_file($field_name,$file_destination,$inserted_id){
+    $data = array($field_name => $file_destination);
+    $this->db->where('id', $inserted_id);
+    $result = $this->db->update('main', $data);
+    return $result;
+  }
 }
