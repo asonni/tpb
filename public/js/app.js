@@ -38,16 +38,23 @@ app.config(function($datepickerProvider) {
     dateType: 'string'
   });
 });
-app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
-  cfpLoadingBarProvider.includeSpinner = true;
-  cfpLoadingBarProvider.spinnerColor = 'red';
-  cfpLoadingBarProvider.barColor = 'red';
-}]);
 app.config(['laddaProvider', function (laddaProvider) {
   laddaProvider.setOption({
     style: 'zoom-out'
   });
 }]);
+app.config(function(NotificationProvider) {
+  NotificationProvider.setOptions({
+    delay: 10000,
+    right:10,
+    startTop: 20,
+    startRight: 10,
+    verticalSpacing: 20,
+    horizontalSpacing: 20,
+    positionX: 'center',
+    positionY: 'top'
+  });
+});
 app.service('uploadService',['$timeout','Upload',function($timeout,Upload){
   this.uploadFile = function(file, fieldName, insertedID) {
     var results = {errorFileType:false};
@@ -77,7 +84,7 @@ app.service('uploadService',['$timeout','Upload',function($timeout,Upload){
     return results;
   };
 }]);
-app.controller('MainCtrl', ['$scope', '$http', '$timeout', 'uploadService', 'cfpLoadingBar', function($scope, $http, $timeout, uploadService, cfpLoadingBar) {
+app.controller('MainCtrl', ['$scope', '$http', '$timeout', 'uploadService', 'cfpLoadingBar', 'Notification', function($scope, $http, $timeout, uploadService, cfpLoadingBar, Notification) {
   $scope.formMain = {
     "companyName": "t1",
     "activityKind": "t2",
@@ -114,6 +121,7 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', 'uploadService', 'cfp
     console.log(data);
   });
   $scope.save = function(){
+    $scope.submitLoading = true;
     $http.post('api/register', {
       main_data: $scope.formMain
     }).success(function (results){
@@ -135,11 +143,33 @@ app.controller('MainCtrl', ['$scope', '$http', '$timeout', 'uploadService', 'cfp
       if ($scope.detectionExecutedProjects) {
         $scope.detectionExecutedProjectsFile = uploadService.uploadFile($scope.detectionExecutedProjects,'detectionExecutedProjects',results.insertedID);
       }
+      $scope.$watchGroup([
+        'memorandumFile.progress',
+        'statuteFile.progress',
+        'operatingLicenseFile.progress',
+        'commercialRecordFile.progress',
+        'chamberFile.progress',
+        'detectionExecutedProjectsFile'
+        ],function() {
+        if (
+          ($scope.memorandumFile.progress == 100) && 
+          ($scope.statuteFile.progress == 100) && 
+          ($scope.operatingLicenseFile.progress == 100) && 
+          ($scope.commercialRecordFile.progress == 100) && 
+          ($scope.chamberFile.progress == 100) && 
+          ($scope.detectionExecutedProjectsFile.progress == 100)
+          ){
+          $scope.submitLoading = false;
+          $scope.reset();
+          Notification.success({message: 'تم التسجيل البيانات بنجاح :)', title: '<div class="text-right">نجاح</div>'});
+        }
+      });
     }).error(function (data){
         console.log(data);
     });
   }
   $scope.reset = function(){
+    $scope.formMain = {};
     $scope.memorandum = "";
     $scope.statute = "";
     $scope.operatingLicense = "";

@@ -30,11 +30,16 @@ class Api extends REST_Controller
     $file_ext = explode('.', $file_name);
     $file_ext = strtolower(end($file_ext));
     $allowed = array('pdf');
+    $path = './public/uploads/';
+    //create the folder if it's not already exists
+    if(!is_dir($path)){
+      mkdir($path,0755,TRUE);
+    }
     if (in_array($file_ext, $allowed)){
       if($file_error === 0) {
         if ($file_size <= 2097152){
           $file_name_new = uniqid('', true) . '.' . $file_ext;
-          $file_destination = './public/uploads/' . $file_name_new;
+          $file_destination = $path . $file_name_new;
           if (move_uploaded_file($file_tmp, $file_destination)){
             // if ($inserted_id > 0){
             //   $this->response("The ID from Back-end is ".$inserted_id);

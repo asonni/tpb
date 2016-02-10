@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="public/css/font-awesome.min.css">
     <link rel="stylesheet" href="public/css/bootstrap/bootstrap-rtl.min.css">
     <link rel="stylesheet" href="public/css/angular-motion/angular-motion.min.css">
-    <link rel="stylesheet" href="public/css/block-ui/angular-block-ui.min.css">
+    <link rel="stylesheet" href="public/css/angular-ui-notification/angular-ui-notification.min.css">
     <link rel="stylesheet" href="public/css/angular-loading-bar/loading-bar.min.css">
     <link rel="stylesheet" href="public/css/angular-ladda/ladda-themeless.min.css">
     <link rel="stylesheet" href="public/css/animate.min.css">
@@ -211,7 +211,7 @@
                                 <p class="bg-danger" ng-show="memorandum && (memorandum.type != 'application/pdf') && !myForm.memorandum.$error.maxSize">
                                   خطأ : الرجاء اختيار ملف نوع (PDF) فقط
                                 </p>
-                                <div class="progress progress-striped active" ng-if="memorandumFile.progress">
+                                <div class="progress progress-striped active" ng-if="memorandumFile.progress && submitLoading">
                                   <div class="progress-bar" ng-style="{'width': memorandumFile.progress + '%'}"></div>
                                 </div>
                               </div>
@@ -232,7 +232,7 @@
                                 <p class="bg-danger" ng-show="statuteFile.errorFileType && !myForm.statute.$error.maxSize">
                                   خطأ : الرجاء اختيار ملف نوع (PDF) فقط
                                 </p>
-                                <div class="progress progress-striped active" ng-if="statuteFile.progress && !statuteFile.errorFileType">
+                                <div class="progress progress-striped active" ng-if="statuteFile.progress && submitLoading">
                                   <div class="progress-bar" ng-style="{'width': statuteFile.progress + '%'}"></div>
                                 </div>
                               </div>
@@ -255,7 +255,7 @@
                                 <p class="bg-danger" ng-show="operatingLicenseFile.errorFileType && !myForm.operatingLicense.$error.maxSize">
                                   خطأ : الرجاء اختيار ملف نوع (PDF) فقط
                                 </p>
-                                <div class="progress progress-striped active" ng-if="operatingLicenseFile.progress && !operatingLicenseFile.errorFileType">
+                                <div class="progress progress-striped active" ng-if="operatingLicenseFile.progress && submitLoading">
                                   <div class="progress-bar" ng-style="{'width': operatingLicenseFile.progress + '%'}"></div>
                                 </div>
                               </div>
@@ -276,7 +276,7 @@
                                 <p class="bg-danger" ng-show="commercialRecordFile.errorFileType && !myForm.commercialRecord.$error.maxSize">
                                   خطأ : الرجاء اختيار ملف نوع (PDF) فقط
                                 </p>
-                                <div class="progress progress-striped active" ng-if="commercialRecordFile.progress && !commercialRecordFile.errorFileType">
+                                <div class="progress progress-striped active" ng-if="commercialRecordFile.progress && submitLoading">
                                   <div class="progress-bar" ng-style="{'width': commercialRecordFile.progress + '%'}"></div>
                                 </div>
                               </div>
@@ -299,7 +299,7 @@
                                 <p class="bg-danger" ng-show="chamberFile.errorFileType && !myForm.chamber.$error.maxSize">
                                   خطأ : الرجاء اختيار ملف نوع (PDF) فقط
                                 </p>
-                                <div class="progress progress-striped active" ng-if="chamberFile.progress && !chamberFile.errorFileType">
+                                <div class="progress progress-striped active" ng-if="chamberFile.progress && submitLoading">
                                   <div class="progress-bar" ng-style="{'width': chamberFile.progress + '%'}"></div>
                                 </div>
                               </div>
@@ -320,7 +320,7 @@
                                 <p class="bg-danger" ng-show="detectionExecutedProjectsFile.errorFileType && !myForm.detectionExecutedProjects.$error.maxSize">
                                   خطأ : الرجاء اختيار ملف نوع (PDF) فقط
                                 </p>
-                                <div class="progress progress-striped active" ng-if="detectionExecutedProjectsFile.progress && !detectionExecutedProjectsFile.errorFileType">
+                                <div class="progress progress-striped active" ng-if="detectionExecutedProjectsFile.progress && submitLoading">
                                   <div class="progress-bar" ng-style="{'width': detectionExecutedProjectsFile.progress + '%'}"></div>
                                 </div>
                               </div>
@@ -357,7 +357,6 @@
     <script src="public/js/angular/angular-animate.min.js"></script>
     <script src="public/js/angular/i18n/angular-locale_ar-ly.js"></script>
     <script src="public/js/angular-ui-notification/angular-ui-notification.min.js"></script>
-    <script src="public/js/angular-block-ui/angular-block-ui.min.js"></script>
     <script src="public/js/angular-auto-validate/jcs-auto-validate.min.js"></script>
     <script src="public/js/jquery/jquery.mask.js"></script>
     <script src="public/js/angular-strap/angular-strap.min.js"></script>
