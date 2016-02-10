@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="public/css/font-awesome.min.css">
     <link rel="stylesheet" href="public/css/bootstrap/bootstrap-rtl.min.css">
     <link rel="stylesheet" href="public/css/angular-motion/angular-motion.min.css">
+    <link rel="stylesheet" href="public/css/block-ui/angular-block-ui.min.css">
+    <link rel="stylesheet" href="public/css/angular-loading-bar/loading-bar.min.css">
+    <link rel="stylesheet" href="public/css/angular-ladda/ladda-themeless.min.css">
     <link rel="stylesheet" href="public/css/animate.min.css">
     <link rel="stylesheet" href="public/css/style.css">
   </head>
@@ -331,7 +334,7 @@
                 <hr>
                 <div class="row">
                   <div class="col-xs-4 col-xs-offset-2 col-lg-2 col-lg-offset-4">
-                    <button type="submit" class="btn btn-sm btn-primary btn-block">تسجيل</button>
+                    <button type="submit" ladda="submitLoading" class="btn btn-sm btn-primary btn-block">تسجيل</button>
                   </div>
                   <div class="col-xs-4 col-lg-2">
                     <button type="reset" ng-click="reset()" class="btn btn-sm btn-danger btn-block">إلغاء</button>
@@ -354,13 +357,17 @@
     <script src="public/js/angular/angular-animate.min.js"></script>
     <script src="public/js/angular/i18n/angular-locale_ar-ly.js"></script>
     <script src="public/js/angular-ui-notification/angular-ui-notification.min.js"></script>
-    <!-- // <script src="public/js/angular-block-ui/angular-block-ui.min.js"></script> -->
+    <script src="public/js/angular-block-ui/angular-block-ui.min.js"></script>
     <script src="public/js/angular-auto-validate/jcs-auto-validate.min.js"></script>
     <script src="public/js/jquery/jquery.mask.js"></script>
     <script src="public/js/angular-strap/angular-strap.min.js"></script>
     <script src="public/js/angular-strap/angular-strap.tpl.min.js"></script>
     <script src="public/js/ng-file-upload/ng-file-upload.min.js"></script>
     <script src="public/js/ng-file-upload/ng-file-upload-shim.min.js"></script>
+    <script src="public/js/angular-loading-bar/loading-bar.min.js"></script>
+    <script src="public/js/angular-ladda/spin.min.js"></script>
+    <script src="public/js/angular-ladda/ladda.min.js"></script>
+    <script src="public/js/angular-ladda/angular-ladda.min.js"></script>
     <script src="public/js/mask.js"></script>
     <script src="public/js/app.js"></script>
   </body>

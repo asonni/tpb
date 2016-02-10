@@ -43,3 +43,19 @@ p.bg-danger {
   margin-top: 10px;
   margin-bottom: -5px;
 }
+.btn-block{
+  direction: ltr;
+}
+#loading-bar .bar {
+background: #2d8bc1;
+height: 4px;
+}
+
+#loading-bar-spinner .spinner-icon {
+width: 18px;
+height: 18px;
+border: solid 4px transparent;
+border-top-color: #2d8bc1;
+border-left-color: #2d8bc1;
+border-radius: 10px;
+}

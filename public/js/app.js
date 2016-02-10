@@ -1,5 +1,5 @@
 'use strict';
-var app = angular.module('tpb', ['ngRoute','ui-notification','jcs-autoValidate','mgcrea.ngStrap','ngAnimate','ngFileUpload']);
+var app = angular.module('tpb', ['ngRoute','ui-notification','jcs-autoValidate','mgcrea.ngStrap','ngAnimate','ngFileUpload','cfp.loadingBar','angular-ladda']);
 app.run(['defaultErrorMessageResolver', function (defaultErrorMessageResolver){
   // validator.setErrorMessageResolver(myCustomErrorMessageResolver.resolve);
   defaultErrorMessageResolver.setI18nFileRootPath('public/js/angular-auto-validate/dist/lang');
@@ -38,6 +38,16 @@ app.config(function($datepickerProvider) {
     dateType: 'string'
   });
 });
+app.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+  cfpLoadingBarProvider.includeSpinner = true;
+  cfpLoadingBarProvider.spinnerColor = 'red';
+  cfpLoadingBarProvider.barColor = 'red';
+}]);
+app.config(['laddaProvider', function (laddaProvider) {
+  laddaProvider.setOption({
+    style: 'zoom-out'
+  });
+}]);
 app.service('uploadService',['$timeout','Upload',function($timeout,Upload){
   this.uploadFile = function(file, fieldName, insertedID) {
     var results = {errorFileType:false};
@@ -67,7 +77,7 @@ app.service('uploadService',['$timeout','Upload',function($timeout,Upload){
     return results;
   };
 }]);
-app.controller('MainCtrl', ['$scope', '$http', 'uploadService', function($scope, $http, uploadService) {
+app.controller('MainCtrl', ['$scope', '$http', '$timeout', 'uploadService', 'cfpLoadingBar', function($scope, $http, $timeout, uploadService, cfpLoadingBar) {
   $scope.formMain = {
     "companyName": "t1",
     "activityKind": "t2",
@@ -91,6 +101,12 @@ app.controller('MainCtrl', ['$scope', '$http', 'uploadService', function($scope,
     "mailPhotographer": "1241",
     "nationalLaborNo": "12441",
     "nonNationalLaborNo": "31243"
+  };
+  cfpLoadingBar.start();
+  window.onload = function(){
+  $timeout(function(){
+    cfpLoadingBar.complete();
+    }, 1000);
   };
   $http.get('nationality.json').success(function (data) {
     $scope.nationalities = data;
